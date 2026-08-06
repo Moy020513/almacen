@@ -30,7 +30,7 @@ public class Venta {
     private EstadoVenta estadoVenta;
 
     @Column(name = "FECHA", nullable = false)
-    private Date fecha;
+    private LocalDate fecha;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ID_SUCURSAL", nullable = false)

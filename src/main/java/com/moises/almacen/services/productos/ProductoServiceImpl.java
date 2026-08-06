@@ -6,7 +6,7 @@ import com.moises.almacen.entities.Producto;
 import com.moises.almacen.enums.Categoria;
 import com.moises.almacen.exceptions.RecursoNoEncontradoException;
 import com.moises.almacen.mappers.ProductoMapper;
-import com.moises.almacen.repositories.ProductoRespository;
+import com.moises.almacen.repositories.ProductoRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.util.List;
 @Slf4j
 public class ProductoServiceImpl implements ProductoService{
 
-    private final ProductoRespository productoRepository;
+    private final ProductoRepository productoRepository;
     private final ProductoMapper productoMapper;
     @Override
     @Transactional(readOnly = true)
@@ -28,8 +28,22 @@ public class ProductoServiceImpl implements ProductoService{
             String nombre, String categoria,
             BigDecimal precioMin, BigDecimal precioMax
     ) {
-        log.info("Listando todos los productos");
-        return productoRepository.findAll().stream()
+        log.info("Filtrando productos");
+        Categoria cat = null;
+        if (categoria != null && !categoria.isBlank()) {
+            try {
+                cat = obtenerCategoriaPorDescripcion(categoria);
+            } catch (RecursoNoEncontradoException e) {
+                cat = null;
+            }
+        }
+        return productoRepository.filtrarProductos(
+                nombre,
+                cat,
+                precioMin,
+                precioMax
+
+                ).stream()
                 .map(productoMapper::entidadAResponse).toList();
     }
 

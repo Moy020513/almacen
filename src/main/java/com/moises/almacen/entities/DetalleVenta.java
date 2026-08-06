@@ -35,7 +35,4 @@ public class DetalleVenta {
     @Column(name = "PRECIO_PRODUCTO", nullable = false)
     private BigDecimal precioProducto;
 
-
-
-
 }
